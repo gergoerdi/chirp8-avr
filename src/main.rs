@@ -82,20 +82,6 @@ impl Peripherals for Board {
 #[no_mangle]
 pub extern fn main() {
     unsafe {
-        // volatile_store(DDRB, volatile_load(DDRB) | MASK);
-
-        // // Configure timer 1 for CTC mode, with divider of 64
-        // volatile_store(TCCR1B, volatile_load(TCCR1B) | 0b_0000_1101);
-
-        // // Timer frequency
-        // volatile_store(OCR1A, 3125 * 20);
-
-        // // Enable CTC interrupt
-        // volatile_store(TIMSK1, volatile_load(TIMSK1) | 0b_0000_0010);
-
-        // // Good to go!
-        // unsafe { asm!("SEI") }
-
         spi::setup();
         pcd8544::setup();
 
@@ -106,12 +92,3 @@ pub extern fn main() {
         loop {}
     }
 }
-
-const MASK: u8 = 0b_0010_0000;
-
-// #[no_mangle]
-// pub unsafe extern "avr-interrupt" fn __vector_11() {
-//     volatile_store(PORTB, volatile_load(PORTB) ^ MASK);
-
-//     // volatile_store(PORTB, MASK);
-// }
