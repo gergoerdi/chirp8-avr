@@ -1,0 +1,8 @@
+[package]
+name = "hello-avr"
+version = "0.1.0"
+authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
+
+[dependencies]
+libcore-mini = { path = "../libcore-mini" }
+chip8-engine = { path = "../chip8-engine-avr" }
