@@ -93,9 +93,19 @@ impl Peripherals for Board {
         }
     }
 
-    fn get_pixel(&self, x: Byte, y: Byte) -> bool { false }
-    fn redraw(&self) {}
+    fn get_pixel(&self, x: Byte, y: Byte) -> bool {
+        let row = y >> 3;
+        let offset = y - (row << 3);
+        let mask = 1 << offset;
 
+        unsafe{
+            FB_PIXELS[x as usize][row as usize] & mask != 0
+        }
+    }
+
+    fn redraw(&self) {
+        // Not really needed? timer will take care of it?
+    }
 
     fn scan_key_row(&self, row: Byte) -> Byte {
         keypad::scan_key_row(row)
