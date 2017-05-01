@@ -25,7 +25,7 @@
 #![allow(unused_unsafe)]
 
 extern crate libcore_mini as core;
-use core::prelude::*;
+use core::prelude::v1::*;
 use core::intrinsics::{volatile_load, volatile_store};
 use core::option;
 use core::iter;
@@ -50,6 +50,7 @@ mod avr;
 use avr::*;
 mod spi;
 mod pcd8544;
+pub mod timer;
 
 use chip8::*;
 use chip8::prelude::*;
@@ -58,12 +59,38 @@ use chip8::peripherals::*;
 struct Board {
 }
 
+static BOARD: Board = Board{};
+
+static mut FB_PIXELS: [[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize] = [[0; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize];
+
+static mut FB_DIRTY: bool = false;
+
 impl Peripherals for Board {
     fn keep_running(&self) -> bool { true }
 
-    fn clear_pixels(&self) {}
+    fn clear_pixels(&self) {
+        unsafe {
+            for mut col in FB_PIXELS.iter_mut() {
+                for mut pixel in col.iter_mut() {
+                    *pixel = 0;
+                }
+            }
+            FB_DIRTY = true;
+        }
+    }
 
-    fn set_pixel(&self, x: Byte, y: Byte, v: bool) {}
+    fn set_pixel(&self, x: Byte, y: Byte, v: bool) {
+        let row = y >> 3;
+        let offset = y - (row << 3);
+        let mask = 1 << offset;
+        let bit = (if v {1} else {0}) << offset;
+
+        unsafe {
+            FB_PIXELS[x as usize][row as usize] = (FB_PIXELS[x as usize][row as usize] & !mask) | bit;
+            FB_DIRTY = true;
+        }
+    }
+
     fn get_pixel(&self, x: Byte, y: Byte) -> bool { false }
     fn redraw(&self) {}
 
@@ -79,15 +106,21 @@ impl Peripherals for Board {
     fn get_random(&self) -> Byte { 0x42 }
 }
 
+pub unsafe fn redraw() {
+    if FB_DIRTY {
+        pcd8544::send(&FB_PIXELS);
+        FB_DIRTY = false;
+    }
+}
+
 #[no_mangle]
 pub extern fn main() {
     unsafe {
         spi::setup();
         pcd8544::setup();
+        timer::setup();
 
-        let mut pixels = [[0; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize];
-        pixels[2][2] = 0xff;
-        pcd8544::send(&pixels);
+        BOARD.set_pixel(10, 10, true);
 
         loop {}
     }
