@@ -51,6 +51,7 @@ use avr::*;
 mod spi;
 mod pcd8544;
 pub mod timer;
+use timer::sleep_ms;
 mod keypad;
 mod serial_ram;
 
@@ -142,6 +143,21 @@ pub unsafe fn redraw() {
     }
 }
 
+fn draw_test_pattern() {
+    for i in 0..10 {
+        BOARD.set_pixel(i, SCREEN_HEIGHT - (i + 1), false);
+        BOARD.set_pixel(i, i, true);
+    }
+    sleep_ms(500);
+
+    for i in 0..10 {
+        BOARD.set_pixel(i, SCREEN_HEIGHT - (i + 1), true);
+        BOARD.set_pixel(i, i, false);
+    }
+    sleep_ms(500);
+    BOARD.clear_pixels();
+}
+
 #[no_mangle]
 pub extern fn main() {
     spi::setup();
@@ -150,6 +166,7 @@ pub extern fn main() {
     timer::setup();
     serial_ram::setup();
 
+    draw_test_pattern();
 
     loop {}
 }
