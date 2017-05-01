@@ -134,15 +134,12 @@ pub unsafe fn redraw() {
 
 #[no_mangle]
 pub extern fn main() {
-    unsafe {
-        spi::setup();
-        pcd8544::setup();
-        keypad::setup();
-        timer::setup();
-        serial_ram::setup();
+    spi::setup();
+    pcd8544::setup();
+    keypad::setup();
+    timer::setup();
+    serial_ram::setup();
 
-        BOARD.set_pixel(10, 10, true);
 
-        loop {}
-    }
+    loop {}
 }

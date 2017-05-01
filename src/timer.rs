@@ -7,7 +7,7 @@ use spi;
 static mut COUNTDOWN: u8 = 0;
 
 pub fn setup() {
-    unsafe{
+    unsafe {
         // Configure timer 1 for CTC mode, with divider of 64
         volatile_store(TCCR1B, volatile_load(TCCR1B) | 0b_0000_1011);
 
