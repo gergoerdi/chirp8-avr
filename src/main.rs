@@ -52,6 +52,7 @@ mod spi;
 mod pcd8544;
 pub mod timer;
 mod keypad;
+mod serial_ram;
 
 use chip8::*;
 use chip8::prelude::*;
@@ -113,8 +114,13 @@ impl Peripherals for Board {
         // Not implemented on this board
     }
 
-    fn read_ram(&self, addr: Addr) -> Byte { 0x00 }
-    fn write_ram(&self, addr: Addr, v: Byte) {}
+    fn read_ram(&self, addr: Addr) -> Byte {
+        serial_ram::read_ram(addr)
+    }
+
+    fn write_ram(&self, addr: Addr, v: Byte) {
+        serial_ram::write_ram(addr, v)
+    }
 
     fn get_random(&self) -> Byte { 0x42 }
 }
@@ -133,6 +139,7 @@ pub extern fn main() {
         pcd8544::setup();
         keypad::setup();
         timer::setup();
+        serial_ram::setup();
 
         BOARD.set_pixel(10, 10, true);
 
