@@ -82,6 +82,7 @@ impl Peripherals for Board {
         }
     }
 
+    #[inline(never)]
     fn set_pixel(&self, x: Byte, y: Byte, v: bool) {
         let row = y >> 3;
         let offset = y - (row << 3);
@@ -94,6 +95,7 @@ impl Peripherals for Board {
         }
     }
 
+    #[inline(never)]
     fn get_pixel(&self, x: Byte, y: Byte) -> bool {
         let row = y >> 3;
         let offset = y - (row << 3);
