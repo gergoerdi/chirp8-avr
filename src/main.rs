@@ -96,9 +96,19 @@ impl Peripherals for Board {
 
     fn scan_key_row(&self, row: Byte) -> Byte { 0x0 }
 
-    fn set_timer(&self, v: Byte) {}
-    fn get_timer(&self) -> Byte { 0x00 }
-    fn set_sound(&self, v: Byte) {}
+
+    fn set_timer(&self, v: Byte) {
+        timer::set_countdown(v)
+    }
+
+    fn get_timer(&self) -> Byte {
+        timer::get_countdown()
+    }
+
+
+    fn set_sound(&self, v: Byte) {
+        // Not implemented on this board
+    }
 
     fn read_ram(&self, addr: Addr) -> Byte { 0x00 }
     fn write_ram(&self, addr: Addr, v: Byte) {}
