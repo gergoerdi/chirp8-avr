@@ -1,5 +1,5 @@
 [package]
-name = "hello-avr"
+name = "chip8-avr"
 version = "0.1.0"
 authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
 
