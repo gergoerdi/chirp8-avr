@@ -35,3 +35,20 @@ pub fn get_countdown() -> u8 {
 pub fn set_countdown(countdown: u8) {
     unsafe{ COUNTDOWN = countdown }
 }
+
+pub fn sleep_ms(duration_ms: u16) {
+    const FREQUENCY_HZ: u32 = 12_000_000;
+    const CYCLES_PER_MS: u16 = (FREQUENCY_HZ / 1000) as u16;
+    const CYCLES_PER_INNER_LOOP: u16 = 6;
+    const INNER_LOOP_ITERATIONS: u16 = CYCLES_PER_MS / CYCLES_PER_INNER_LOOP;
+
+    let mut outer = 0;
+    while outer < duration_ms {
+        let mut inner = 0;
+        while inner < INNER_LOOP_ITERATIONS {
+            unsafe { asm!(""); }
+            inner += 1;
+        }
+        outer += 1;
+    }
+}

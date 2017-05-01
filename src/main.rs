@@ -51,6 +51,7 @@ use avr::*;
 mod spi;
 mod pcd8544;
 pub mod timer;
+mod keypad;
 
 use chip8::*;
 use chip8::prelude::*;
@@ -94,8 +95,10 @@ impl Peripherals for Board {
     fn get_pixel(&self, x: Byte, y: Byte) -> bool { false }
     fn redraw(&self) {}
 
-    fn scan_key_row(&self, row: Byte) -> Byte { 0x0 }
 
+    fn scan_key_row(&self, row: Byte) -> Byte {
+        keypad::scan_key_row(row)
+    }
 
     fn set_timer(&self, v: Byte) {
         timer::set_countdown(v)
@@ -128,6 +131,7 @@ pub extern fn main() {
     unsafe {
         spi::setup();
         pcd8544::setup();
+        keypad::setup();
         timer::setup();
 
         BOARD.set_pixel(10, 10, true);
