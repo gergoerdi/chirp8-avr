@@ -4,10 +4,10 @@ use core::intrinsics::{volatile_load, volatile_store};
 pub fn setup() {
     unsafe {
         // Set SS to HIGH
-        volatile_store(PORTB, volatile_load(PORTB) | 1 << 2);
+        volatile_store(PORTB, volatile_load(PORTB) | (1 << 2));
 
         // Set up SPI pin directions
-        volatile_store(DDRB, volatile_load(DDRB) | 1 << 2 | 1 << 3 | 1 << 5);
+        volatile_store(DDRB, volatile_load(DDRB) | (1 << 2) | (1 << 3) | (1 << 5));
         volatile_store(DDRB, volatile_load(DDRB) & !(1 << 4));
 
         // Turn on SPI

@@ -17,8 +17,8 @@ pub fn setup() {
         volatile_store(PORTD, volatile_load(PORTD) | 1 << 4);
 
         // Initialize
-        volatile_store(PORTD, volatile_load(PORTD) & !1<<3); // Chip select LCD
-        volatile_store(PORTD, volatile_load(PORTD) & !1<<5); // Set Command mode
+        volatile_store(PORTD, volatile_load(PORTD) & !(1<<3)); // Chip select LCD
+        volatile_store(PORTD, volatile_load(PORTD) & !(1<<5)); // Set Command mode
 
         spi::sync(0x20 | 0x1); // Turn on chip, set extended command set
         spi::sync(0x10 | 4); // Set bias to 4 (???)
@@ -35,8 +35,8 @@ use chip8::peripherals::{SCREEN_WIDTH, SCREEN_HEIGHT};
 #[inline(never)]
 pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]) {
     unsafe {
-        volatile_store(PORTD, volatile_load(PORTD) & !1<<3); // Chip select LCD
-        volatile_store(PORTD, volatile_load(PORTD) & !1<<5); // Set Command mode
+        volatile_store(PORTD, volatile_load(PORTD) & !(1 << 3)); // Chip select LCD
+        volatile_store(PORTD, volatile_load(PORTD) & !(1 << 5)); // Set Command mode
 
         spi::sync(0x20 | 0x2); // Vertical addressing
         spi::sync(0x80 | 0);   // Set X address
