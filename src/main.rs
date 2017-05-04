@@ -189,8 +189,8 @@ pub extern fn main() {
     spi::setup();
     pcd8544::setup();
     keypad::setup();
-    timer::setup();
     serial_ram::setup();
+    // timer::setup();
 
     draw_test_pattern();
 
@@ -199,7 +199,7 @@ pub extern fn main() {
 
     let mut machine = chip8::machine::Machine::new();
 
-    while io.keep_running() {
+    loop {
         machine.step(io);
     }
 }
