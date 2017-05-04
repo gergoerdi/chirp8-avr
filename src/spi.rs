@@ -11,7 +11,7 @@ pub fn setup() {
         volatile_store(DDRB, volatile_load(DDRB) & !(1 << 4));
 
         // Turn on SPI
-        volatile_store(SPCR, volatile_load(SPCR) | 1 << 6 | 1 << 4);
+        volatile_store(SPCR, (1 << 6) | (1 << 4));
     }
 }
 
