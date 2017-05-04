@@ -6,7 +6,10 @@ use spi;
 
 pub fn setup() {
     unsafe {
-        volatile_store(DDRB, volatile_load(DDRD) | 1 << 0);
+        volatile_store(DDRD, volatile_load(DDRD) | 1 << 6);
+        volatile_store(PORTD, volatile_load(PORTD) | 1 << 6);
+
+        volatile_store(DDRB, volatile_load(DDRB) | 1 << 0);
         volatile_store(PORTB, volatile_load(PORTB) | 1 << 0);
 
         volatile_store(PORTD, volatile_load(PORTD) & !(1 << 6));
