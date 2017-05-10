@@ -14,7 +14,7 @@ pub fn setup() {
 
         // Set up input pins (with pull-up resistors enabled)
         volatile_store(DDRC, volatile_load(DDRC) & !(1 << 2 | 1 << 3 | 1 << 4 | 1 << 5));
-        volatile_store(PORTC, volatile_load(DDRC) | (1 << 2 | 1 << 3 | 1 << 4 | 1 << 5));
+        // volatile_store(PORTC, volatile_load(DDRC) | (1 << 2 | 1 << 3 | 1 << 4 | 1 << 5));
     }
 }
 
