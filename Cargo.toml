@@ -5,4 +5,4 @@ authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
 
 [dependencies]
 libcore-mini = { git = "https://github.com/gergoerdi/rust-avr-libcore-mini", tag = "v0.1.0" }
-chip8-engine = { path = "../chip8-engine-avr" }
+chip8-engine = { git = "https://github.com/gergoerdi/rust-avr-chip8-engine", branch = "avr" }
