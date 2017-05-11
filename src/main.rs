@@ -138,6 +138,7 @@ impl Peripherals for Board {
     fn get_random(&self) -> Byte { 0x42 }
 }
 
+#[inline(never)]
 pub unsafe fn redraw() {
     if FB_DIRTY {
         pcd8544::send(&FB_PIXELS);
@@ -146,13 +147,13 @@ pub unsafe fn redraw() {
 }
 
 fn draw_test_pattern() {
-    for i in 0..10 {
+    for i in 0..48 {
         BOARD.set_pixel(i, SCREEN_HEIGHT - (i + 1), false);
         BOARD.set_pixel(i, i, true);
     }
     sleep_ms(500);
 
-    for i in 0..10 {
+    for i in 0..48 {
         BOARD.set_pixel(i, SCREEN_HEIGHT - (i + 1), true);
         BOARD.set_pixel(i, i, false);
     }
@@ -190,7 +191,7 @@ pub extern fn main() {
     pcd8544::setup();
     keypad::setup();
     serial_ram::setup();
-    // timer::setup();
+    timer::setup();
 
     draw_test_pattern();
 
