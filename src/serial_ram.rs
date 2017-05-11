@@ -19,6 +19,7 @@ pub fn setup() {
     }
 }
 
+#[inline(never)]
 pub fn write_ram(addr: u16, value: u8) {
     unsafe {
         asm!("CLI");
@@ -34,6 +35,7 @@ pub fn write_ram(addr: u16, value: u8) {
     }
 }
 
+#[inline(never)]
 pub fn read_ram(addr: u16) -> u8 {
     unsafe {
         asm!("CLI");
