@@ -1,4 +1,3 @@
-use core::prelude::v1::*;
 use core::intrinsics::{volatile_load, volatile_store};
 
 use avr::*;

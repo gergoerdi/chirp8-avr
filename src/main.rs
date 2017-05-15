@@ -1,4 +1,3 @@
-#![feature(no_core)]
 #![feature(lang_items)]
 #![feature(fundamental)]
 #![feature(intrinsics)]
@@ -10,7 +9,7 @@
 #![feature(abi_avr_interrupt)]
 #![feature(unwind_attributes)]
 
-#![no_core]
+#![no_std]
 #![no_main]
 
 #![feature(never_type)]
@@ -23,13 +22,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_unsafe)]
-
-extern crate libcore_mini as core;
-use core::prelude::v1::*;
-use core::intrinsics::{volatile_load, volatile_store};
-use core::option;
-use core::iter;
-use core::ops;
 
 extern crate chip8_engine as chip8;
 
