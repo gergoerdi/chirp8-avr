@@ -4,5 +4,4 @@ version = "0.1.0"
 authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
 
 [dependencies]
-core = { git = "https://github.com/gergoerdi/rust-avr-libcore-mini", rev = "adda44aa91ac517aab6915447592ee4cad26564c" }
-chip8-engine = { git = "https://github.com/gergoerdi/rust-avr-chip8-engine", rev = "c6f88737bae4dae0bd6c5c2bbc73737e6dfadfcd" }
+chip8-engine = { git = "https://github.com/gergoerdi/rust-avr-chip8-engine", rev = "bc70dd2e9b728dfd5166ab7d65ac25da5e1ef6f0" }
