@@ -26,6 +26,7 @@ easy to build it on a breadboard. **NOTE THE RAM CHIP DOESN'T SUPPORT
 Uno is going to fry the RAM chip.
 
 ![Schematics](board-schematics.png)
+![Photo of breadboard version](https://gergo.erdi.hu/blog/2017-05-12-rust_on_avr__beyond_blinking/chip328.jpg)
 
 # Building
 
