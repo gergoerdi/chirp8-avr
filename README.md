@@ -87,9 +87,15 @@ Another way of trying it out is simulation: I've implemented
 a [SimAVR-based simulator][simavr] for the above schematics that
 almost runs in real time, as an interactive SDL app.
 
+# What's next?
+
+There is no shortage of [Rust and LLVM bugs and missing features][bugs]
+in the AVR backends, if you want to help out.
+
 
 [blog]: https://gergo.erdi.hu/blog/2017-05-12-rust_on_avr__beyond_blinking/
 [chip8-engine]: https://github.com/gergoerdi/rust-avr-chip8-engine
 [chip8-sdl]: https://github.com/gergoerdi/rust-avr-chip8-engine
 [xargo-rustup]: https://github.com/japaric/xargo/issues/138
 [simavr]: https://github.com/gergoerdi/rust-avr-chip8-simulator
+[bugs]: https://github.com/avr-rust/rust/issues
