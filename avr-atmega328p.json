@@ -14,7 +14,7 @@
   "linker": "avr-gcc",
   "linker-flavor": "gcc",
   "pre-link-args": {
-    "gcc": ["-Os", "-mmcu=atmega328p"]
+    "gcc": ["-Os", "-mmcu=atmega328p", "-T", "lookup-text.ld"]
   },
   "exe-suffix": ".elf",
   "post-link-args": {
