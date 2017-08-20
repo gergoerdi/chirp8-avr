@@ -30,8 +30,8 @@ Uno is going to fry the RAM chip.
 
 # Building
 
-AVR support in LLVM and Rust is not yet available in their mainline
-versions, and there are some questionable hacks that I had to add to
+AVR support in Rust is not yet available its mainline
+version, and there are some questionable hacks that I had to add to
 work around some compiler bugs and missing features. All this means
 you'll need to build very specific versions of LLVM and Rust to be
 able to compile this crate. Also, because of some remaining bugs in
