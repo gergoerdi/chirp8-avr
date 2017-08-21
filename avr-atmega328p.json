@@ -1,10 +1,10 @@
 {
-  "llvm-target": "avr-atmel-none",
+  "llvm-target": "avr-unknown-unknown",
   "cpu": "atmega328p",
   "target-endian": "little",
   "target-pointer-width": "16",
-  "os": "none",
-  "target-env": "gnu",
+  "os": "unknown",
+  "target-env": "",
   "target-vendor": "unknown",
   "arch": "avr",
   "data-layout": "e-p:16:8-i8:8-i16:8-i32:8-i64:8-f32:8-f64:8-n8-a:8",
