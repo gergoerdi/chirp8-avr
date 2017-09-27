@@ -1,7 +1,6 @@
 use core::intrinsics::{volatile_load, volatile_store};
 
 use avr::*;
-use spi;
 
 static mut COUNTDOWN: u8 = 0;
 

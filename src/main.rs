@@ -1,27 +1,14 @@
 #![feature(lang_items)]
-#![feature(fundamental)]
-#![feature(intrinsics)]
-#![feature(on_unimplemented)]
-#![feature(optin_builtin_traits)]
-#![feature(unboxed_closures)]
-#![feature(associated_type_defaults)]
 #![feature(asm)]
 #![feature(abi_avr_interrupt)]
 #![feature(unwind_attributes)]
+#![feature(core_intrinsics)]
 
 #![no_std]
 #![no_main]
 
-#![feature(never_type)]
-#![feature(rustc_attrs)]
-#![feature(core_intrinsics)]
-#![feature(prelude_import)]
-#![feature(staged_api)]
-
 #![allow(unused_variables)]
 #![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_unsafe)]
 
 extern crate chip8_engine as chip8;
 
@@ -39,7 +26,6 @@ pub mod std {
 }
 
 mod avr;
-use avr::*;
 mod spi;
 mod pcd8544;
 pub mod timer;
@@ -47,7 +33,6 @@ use timer::sleep_ms;
 mod keypad;
 mod serial_ram;
 
-use chip8::*;
 use chip8::prelude::*;
 use chip8::peripherals::*;
 
