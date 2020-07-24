@@ -38,38 +38,26 @@ able to compile this crate. Also, because of some remaining bugs in
 the LLVM AVR backend, Rust's stock `libcore` cannot be compiled yet;
 we need to use Xargo to link to a slightly stripped down version.
 
-## 1. Build branch of LLVM with AVR support + kludges
+## 1. Install the Rust nightly compiler and the rust-src rustup component
 
-```
-$ git clone -b avr-rust-demo https://github.com/avr-rust/llvm.git llvm-avr
-$ mkdir -p build/llvm
-$ cd build/llvm
-$ cmake ../../llvm-avr -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR -DLLVM_TARGETS_TO_BUILD=X86
-$ make
-$ cd ../...
-```
+Install [rustup](https://rustup.rs/).
 
-## 2. Build branch of `rustc` with AVR support
+Then install the Rust nightly compiler, and then add the `rust-src` component to Rustup.
 
-```
-$ git clone -b avr-support https://github.com/avr-rust/rust.git rust-avr
-$ mkdir -p build/rust
-$ cd build/rust
-$ ../../rust-avr/configure --llvm-root=$(realpath ../llvm)
-$ make
-$ cd ../..
+```bash
+# add the rust-src component which is used for building libcore
+rustup component add rust-src
 ```
 
-## 3. Register freshly-built Rust AVR toolchain with `rustup` (needed to work around [a Xargo bug][xargo-rustup])
+## 2. Enable the nightly compiler by default with `rustup`
 
-```
-$ rustup toolchain link avr-toolchain $(realpath build/rust/build/x86_64-unknown-linux-gnu/stage1
-$ rustup default avr-toolchain
+```bash
+$ rustup default nightly
 ```
 
-## 4. Build `chip8-avr` and all its dependencies using Xargo
+## 3. Build `chip8-avr` and all its dependencies using Xargo
 
-```
+```bash
 $ git clone https://github.com/gergoerdi/rust-avr-chip8-avr chip8-avr
 $ cd chip8-avr
 $ sh build.sh
