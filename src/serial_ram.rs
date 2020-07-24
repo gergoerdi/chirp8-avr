@@ -21,7 +21,7 @@ pub fn setup() {
 #[inline(never)]
 pub fn write_ram(addr: u16, value: u8) {
     unsafe {
-        asm!("CLI");
+        llvm_asm!("CLI");
 
         volatile_store(PORTD, volatile_load(PORTD) & !(1 << 6));
         spi::sync(0x02);
@@ -30,14 +30,14 @@ pub fn write_ram(addr: u16, value: u8) {
         spi::sync(value);
         volatile_store(PORTD, volatile_load(PORTD) | (1 << 6));
 
-        asm!("SEI");
+        llvm_asm!("SEI");
     }
 }
 
 #[inline(never)]
 pub fn read_ram(addr: u16) -> u8 {
     unsafe {
-        asm!("CLI");
+        llvm_asm!("CLI");
 
         volatile_store(PORTD, volatile_load(PORTD) & !(1 << 6));
         spi::sync(0x03);
@@ -46,7 +46,7 @@ pub fn read_ram(addr: u16) -> u8 {
         let value = spi::sync(0);
         volatile_store(PORTD, volatile_load(PORTD) | (1 << 6));
 
-        asm!("SEI");
+        llvm_asm!("SEI");
 
         value
     }

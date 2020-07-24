@@ -1,5 +1,5 @@
 #![feature(lang_items)]
-#![feature(asm)]
+#![feature(llvm_asm)]
 #![feature(abi_avr_interrupt)]
 #![feature(unwind_attributes)]
 #![feature(core_intrinsics)]

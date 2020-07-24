@@ -15,7 +15,7 @@ pub fn setup() {
         volatile_store(TIMSK1, volatile_load(TIMSK1) | 1 << 1);
 
         // Good to go!
-        asm!("SEI")
+        llvm_asm!("SEI")
     }
 }
 
@@ -44,7 +44,7 @@ pub fn sleep_ms(duration_ms: u16) {
     while outer < duration_ms {
         let mut inner = 0;
         while inner < INNER_LOOP_ITERATIONS {
-            unsafe { asm!(""); }
+            unsafe { llvm_asm!(""); }
             inner += 1;
         }
         outer += 1;
