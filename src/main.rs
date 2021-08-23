@@ -18,9 +18,8 @@ pub mod std {
     pub unsafe extern "C" fn rust_eh_personality(state: (), exception_object: *mut (), context: *mut ()) -> () {
     }
 
-    #[lang = "panic_fmt"]
-    #[unwind]
-    pub extern fn rust_begin_panic(msg: (), file: &'static str, line: u32) -> ! {
+    #[panic_handler]
+    pub extern fn rust_begin_panic(pi: &core::panic::PanicInfo) -> ! {
         loop{}
     }
 }
