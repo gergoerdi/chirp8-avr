@@ -15,8 +15,7 @@ extern crate chip8_engine as chip8;
 pub mod std {
     #[lang = "eh_personality"]
     #[no_mangle]
-    pub unsafe extern "C" fn rust_eh_personality(state: (), exception_object: *mut (), context: *mut ()) -> () {
-    }
+    pub unsafe extern "C" fn rust_eh_personality() {}
 
     #[panic_handler]
     pub extern fn rust_begin_panic(pi: &core::panic::PanicInfo) -> ! {
