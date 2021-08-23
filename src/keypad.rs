@@ -27,7 +27,7 @@ pub fn scan_key_row(row: u8) -> u8 {
             _ => {}
         };
 
-        asm!("NOP");
+        llvm_asm!("NOP");
 
         let mut result = 0;
         let mut buf = 0;

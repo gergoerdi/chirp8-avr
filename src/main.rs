@@ -1,8 +1,8 @@
 #![feature(lang_items)]
-#![feature(asm)]
 #![feature(abi_avr_interrupt)]
 #![feature(unwind_attributes)]
 #![feature(core_intrinsics)]
+#![feature(llvm_asm)]
 
 #![no_std]
 #![no_main]
