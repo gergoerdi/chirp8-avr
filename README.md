@@ -5,10 +5,10 @@ This is a CHIP-8 virtual machine implementation running on AVR.
 Its big party trick is that **it is written in Rust**: it is the first
 non-trivial Rust application running on AVR. You can read about its
 development process in [my blog post][blog]. The CHIP-8 VM itself is
-implemented in a [separate, portable crate][chip8-engine] written in
+implemented in a [separate, portable crate][chirp8-engine] written in
 idiomatic Rust fashion, heavily using algebraic data types and pattern
 matching; this crate can then be used both to build
-an [SDL-based desktop app][chip8-sdl] and also this crate running on
+an [SDL-based desktop app][chirp8-sdl] and also this crate running on
 AVR microcontrollers.
 
 The intended hardware is a simple circuit with very few components:
@@ -67,18 +67,18 @@ $ rustup toolchain link avr-toolchain $(realpath build/rust/build/x86_64-unknown
 $ rustup default avr-toolchain
 ```
 
-## 4. Build `chip8-avr` and all its dependencies using Xargo
+## 4. Build `chirp8-avr` and all its dependencies using Xargo
 
 ```
-$ git clone https://github.com/gergoerdi/rust-avr-chip8-avr chip8-avr
-$ cd chip8-avr
+$ git clone https://github.com/gergoerdi/chipr8-avr chirp8-avr
+$ cd chirp8-avr
 $ sh build.sh
 ```
 
 # Running
 
 The above process will result in the AVR ELF executable
-`target/avr-atmega328p/release/chip8-avr.elf`. This executable can be
+`target/avr-atmega328p/release/chirp8-avr.elf`. This executable can be
 uploaded to the ATMega328P via an AVR programmer; or if you use
 something like an Arduino Pro 3.3V or an Adafruit Trinket Pro 3.3V,
 you can upload it directly via USB.
@@ -94,8 +94,8 @@ in the AVR backends, if you want to help out.
 
 
 [blog]: https://gergo.erdi.hu/blog/2017-05-12-rust_on_avr__beyond_blinking/
-[chip8-engine]: https://github.com/gergoerdi/rust-avr-chip8-engine
-[chip8-sdl]: https://github.com/gergoerdi/rust-avr-chip8-engine
+[chirp8-engine]: https://github.com/gergoerdi/chirp8-engine
+[chirp8-sdl]: https://github.com/gergoerdi/chirp8-sdl
 [xargo-rustup]: https://github.com/japaric/xargo/issues/138
 [simavr]: https://github.com/gergoerdi/rust-avr-chip8-simulator
 [bugs]: https://github.com/avr-rust/rust/issues

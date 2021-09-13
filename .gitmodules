@@ -1,0 +1,3 @@
+[submodule "chirp8-engine"]
+	path = chirp8-engine
+	url = git@github.com:gergoerdi/chirp8-engine.git

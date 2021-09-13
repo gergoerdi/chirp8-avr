@@ -10,7 +10,7 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
-extern crate chip8_engine as chip8;
+extern crate chirp8_engine as chirp8;
 
 pub mod std {
     #[lang = "eh_personality"]
@@ -31,8 +31,8 @@ use timer::sleep_ms;
 mod keypad;
 mod serial_ram;
 
-use chip8::prelude::*;
-use chip8::peripherals::*;
+use chirp8::prelude::*;
+use chirp8::peripherals::*;
 
 struct Board {
 }
@@ -48,8 +48,8 @@ impl Peripherals for Board {
 
     fn clear_pixels(&self) {
         unsafe {
-            for mut col in FB_PIXELS.iter_mut() {
-                for mut pixel in col.iter_mut() {
+            for col in FB_PIXELS.iter_mut() {
+                for pixel in col.iter_mut() {
                     *pixel = 0;
                 }
             }
@@ -173,7 +173,7 @@ pub extern fn main() {
     upload_font(io);
     upload_prog(io);
 
-    let mut machine = chip8::machine::Machine::new();
+    let mut machine = chirp8::machine::Machine::new();
 
     loop {
         machine.step(io);

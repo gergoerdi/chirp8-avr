@@ -1,7 +1,7 @@
 [package]
-name = "chip8-avr"
+name = "chirp8-avr"
 version = "0.1.0"
 authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
 
 [dependencies]
-chip8-engine = { git = "https://github.com/gergoerdi/rust-avr-chip8-engine", rev = "2188228b4d0446810c47f8129952242cc86d1f45" }
+chirp8-engine = { path = "chirp8-engine" }

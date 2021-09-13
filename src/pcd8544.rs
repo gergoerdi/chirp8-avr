@@ -29,7 +29,7 @@ pub fn setup() {
     }
 }
 
-use chip8::peripherals::{SCREEN_WIDTH, SCREEN_HEIGHT};
+use chirp8::peripherals::{SCREEN_WIDTH, SCREEN_HEIGHT};
 
 #[inline(never)]
 pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]) {
