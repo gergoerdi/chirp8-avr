@@ -8,3 +8,4 @@ cc = "1.0"
 
 [dependencies]
 chirp8-engine = { path = "chirp8-engine" }
+avr-std-stub = { version = "1.0" }

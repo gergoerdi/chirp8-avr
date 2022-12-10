@@ -1,6 +1,4 @@
-#![feature(lang_items)]
 #![feature(abi_avr_interrupt)]
-#![feature(unwind_attributes)]
 #![feature(core_intrinsics)]
 #![feature(llvm_asm)]
 
@@ -11,17 +9,7 @@
 #![allow(dead_code)]
 
 extern crate chirp8_engine as chirp8;
-
-pub mod std {
-    #[lang = "eh_personality"]
-    #[no_mangle]
-    pub unsafe extern "C" fn rust_eh_personality() {}
-
-    #[panic_handler]
-    pub extern fn rust_begin_panic(pi: &core::panic::PanicInfo) -> ! {
-        loop{}
-    }
-}
+extern crate avr_std_stub;
 
 mod avr;
 mod spi;

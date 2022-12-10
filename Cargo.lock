@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "avr-std-stub"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "839920177137ff472f3c35abf5b8166f331c6cf7f2dfa7ffd69f9aa7dc70b526"
+
+[[package]]
 name = "cc"
 version = "1.0.70"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -12,6 +18,7 @@ checksum = "d26a6ce4b6a484fa3edb70f7efa6fc430fd2b87285fe8b84304fd0936faa0dc0"
 name = "chirp8-avr"
 version = "0.1.0"
 dependencies = [
+ "avr-std-stub",
  "cc",
  "chirp8-engine",
 ]
