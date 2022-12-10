@@ -1,6 +1,6 @@
 #![feature(abi_avr_interrupt)]
 #![feature(core_intrinsics)]
-#![feature(llvm_asm)]
+#![feature(asm_experimental_arch)]
 
 #![no_std]
 #![no_main]

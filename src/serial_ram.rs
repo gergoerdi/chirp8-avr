@@ -1,4 +1,5 @@
 use core::intrinsics::{volatile_load, volatile_store};
+use core::arch::asm;
 
 use avr::*;
 use spi;
@@ -21,7 +22,7 @@ pub fn setup() {
 #[inline(never)]
 pub fn write_ram(addr: u16, value: u8) {
     unsafe {
-        llvm_asm!("CLI");
+        asm!("CLI");
 
         volatile_store(PORTD, volatile_load(PORTD) & !(1 << 6));
         spi::sync(0x02);
@@ -30,14 +31,14 @@ pub fn write_ram(addr: u16, value: u8) {
         spi::sync(value);
         volatile_store(PORTD, volatile_load(PORTD) | (1 << 6));
 
-        llvm_asm!("SEI");
+        asm!("SEI");
     }
 }
 
 #[inline(never)]
 pub fn read_ram(addr: u16) -> u8 {
     unsafe {
-        llvm_asm!("CLI");
+        asm!("CLI");
 
         volatile_store(PORTD, volatile_load(PORTD) & !(1 << 6));
         spi::sync(0x03);
@@ -46,7 +47,7 @@ pub fn read_ram(addr: u16) -> u8 {
         let value = spi::sync(0);
         volatile_store(PORTD, volatile_load(PORTD) | (1 << 6));
 
-        llvm_asm!("SEI");
+        asm!("SEI");
 
         value
     }

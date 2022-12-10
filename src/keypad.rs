@@ -1,4 +1,5 @@
 use core::intrinsics::{volatile_load, volatile_store};
+use core::arch::asm;
 
 use avr::*;
 use timer;
@@ -27,7 +28,7 @@ pub fn scan_key_row(row: u8) -> u8 {
             _ => {}
         };
 
-        llvm_asm!("NOP");
+        asm!("NOP");
 
         let mut result = 0;
         let mut buf = 0;

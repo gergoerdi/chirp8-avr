@@ -1,4 +1,5 @@
 use core::intrinsics::{volatile_load, volatile_store};
+use core::arch::asm;
 
 use avr::*;
 
@@ -15,7 +16,7 @@ pub fn setup() {
         volatile_store(TIMSK1, volatile_load(TIMSK1) | 1 << 1);
 
         // Good to go!
-        llvm_asm!("SEI")
+        asm!("SEI")
     }
 }
 
@@ -44,7 +45,7 @@ pub fn sleep_ms(duration_ms: u16) {
     while outer < duration_ms {
         let mut inner = 0;
         while inner < INNER_LOOP_ITERATIONS {
-            unsafe { llvm_asm!(""); }
+            unsafe { asm!(""); }
             inner += 1;
         }
         outer += 1;
