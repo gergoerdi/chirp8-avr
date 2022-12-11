@@ -1,3 +1,1 @@
-sh roms.sh
-XARGO_RUST_SRC=/ xargo build --target=avr-atmega328p --release $@
-
+cargo build -Z build-std=core --target=avr-unknown-gnu-atmega328.json --release $@
