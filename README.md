@@ -30,49 +30,23 @@ Uno is going to fry the RAM chip.
 
 # Building
 
-AVR support in Rust is not yet available its mainline
-version, and there are some questionable hacks that I had to add to
-work around some compiler bugs and missing features. All this means
-you'll need to build very specific versions of LLVM and Rust to be
-able to compile this crate. Also, because of some remaining bugs in
-the LLVM AVR backend, Rust's stock `libcore` cannot be compiled yet;
-we need to use Xargo to link to a slightly stripped down version.
-
-## 1. Build branch of LLVM with AVR support + kludges
+AVR support in Rust is not yet available its mainline version, so you
+have to use a recent nightly. To override the default Rust version
+locally in this directory, use `rustup override`:
 
 ```
-$ git clone -b avr-rust-demo https://github.com/avr-rust/llvm.git llvm-avr
-$ mkdir -p build/llvm
-$ cd build/llvm
-$ cmake ../../llvm-avr -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR -DLLVM_TARGETS_TO_BUILD=X86
-$ make
-$ cd ../...
+$ rustup override set nightly-2022-12-09
 ```
 
-## 2. Build branch of `rustc` with AVR support
+You can find more information about the installation procedure in
+[The AVR-Rust Guidebook](https://book.avr-rust.com/002-installing-the-compiler.html).
+
+At this point, you can build `chirp8-avr` and its
+dependencies. The Rust compiler seems to have trouble building in
+debug mode, so only release builds are supported for now:
 
 ```
-$ git clone -b avr-support https://github.com/avr-rust/rust.git rust-avr
-$ mkdir -p build/rust
-$ cd build/rust
-$ ../../rust-avr/configure --llvm-root=$(realpath ../llvm)
-$ make
-$ cd ../..
-```
-
-## 3. Register freshly-built Rust AVR toolchain with `rustup` (needed to work around [a Xargo bug][xargo-rustup])
-
-```
-$ rustup toolchain link avr-toolchain $(realpath build/rust/build/x86_64-unknown-linux-gnu/stage1
-$ rustup default avr-toolchain
-```
-
-## 4. Build `chirp8-avr` and all its dependencies using Xargo
-
-```
-$ git clone https://github.com/gergoerdi/chipr8-avr chirp8-avr
-$ cd chirp8-avr
-$ sh build.sh
+$ cargo build --release
 ```
 
 # Running
@@ -87,15 +61,9 @@ Another way of trying it out is simulation: I've implemented
 a [SimAVR-based simulator][simavr] for the above schematics that
 almost runs in real time, as an interactive SDL app.
 
-# What's next?
-
-There is no shortage of [Rust and LLVM bugs and missing features][bugs]
-in the AVR backends, if you want to help out.
-
 
 [blog]: https://gergo.erdi.hu/blog/2017-05-12-rust_on_avr__beyond_blinking/
 [chirp8-engine]: https://github.com/gergoerdi/chirp8-engine
 [chirp8-sdl]: https://github.com/gergoerdi/chirp8-sdl
 [xargo-rustup]: https://github.com/japaric/xargo/issues/138
-[simavr]: https://github.com/gergoerdi/rust-avr-chip8-simulator
-[bugs]: https://github.com/avr-rust/rust/issues
+[simavr]: https://github.com/gergoerdi/chirp8-avr-simulator
