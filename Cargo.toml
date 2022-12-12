@@ -10,3 +10,7 @@ cc = "1.0"
 [dependencies]
 chirp8-engine = { path = "chirp8-engine" }
 avr-std-stub = { version = "1.0" }
+ruduino = {  git = "https://github.com/avr-rust/ruduino", rev = "c0574999752c6bfc2c190312661a0c264247e5b1" }
+
+[profile.release]
+lto = true

@@ -3,3 +3,6 @@ target = "avr-unknown-gnu-atmega328.json"
 
 [unstable]
 build-std = ["core"]
+
+[env]
+AVR_CPU_FREQUENCY_HZ = "16_000_000"
