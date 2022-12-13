@@ -12,7 +12,6 @@ extern crate chirp8_engine as chirp8;
 extern crate avr_std_stub;
 extern crate ruduino;
 
-mod avr;
 mod spi;
 mod pcd8544;
 pub mod timer;

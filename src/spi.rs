@@ -1,24 +1,23 @@
-use avr::*;
-use core::intrinsics::{volatile_load, volatile_store};
+use ruduino::Pin;
+use ruduino::Register;
+use ruduino::cores::current::{port,SPCR,SPDR,SPSR};
 
 pub fn setup() {
-    unsafe {
-        // Set SS to HIGH
-        volatile_store(PORTB, volatile_load(PORTB) | (1 << 2));
+    // Set up SPI pin directions
+    port::B3::set_output();
+    port::B5::set_output();
+    port::B4::set_input();
 
-        // Set up SPI pin directions
-        volatile_store(DDRB, volatile_load(DDRB) | (1 << 2) | (1 << 3) | (1 << 5));
-        volatile_store(DDRB, volatile_load(DDRB) & !(1 << 4));
+    // SS is used for unrelated output
+    port::B2::set_output();
+    port::B2::set_high();
 
-        // Turn on SPI
-        volatile_store(SPCR, (1 << 6) | (1 << 4));
-    }
+    // Turn on SPI
+    SPCR::set(SPCR::SPE | SPCR::MSTR);
 }
 
 pub fn sync(out: u8) -> u8 {
-    unsafe {
-        volatile_store(SPDR, out);
-        while volatile_load(SPSR) & 1 << 7 == 0 {}
-        volatile_load(SPDR)
-    }
+    SPDR::write(out);
+    SPSR::wait_until_set(SPSR::SPIF);
+    SPDR::read()
 }

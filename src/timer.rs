@@ -1,23 +1,20 @@
-use core::intrinsics::{volatile_load, volatile_store};
 use core::arch::asm;
 
-use avr::*;
+use ruduino::interrupt::*;
+use ruduino::Register;
+use ruduino::cores::current::{TCCR1B,OCR1A,TIMSK1};
 
 static mut COUNTDOWN: u8 = 0;
 
 pub fn setup() {
-    unsafe {
+    without_interrupts(|| {
         // Configure timer 1 for CTC mode, with divider of 64
-        volatile_store(TCCR1B, volatile_load(TCCR1B) | 0b_0000_1011);
-
-        volatile_store(OCR1A, 4167); // 60 Hz
+        TCCR1B::write(TCCR1B::read() | 0b_0000_1011);
+        OCR1A::write(4167u16); // 60 Hz
 
         // Enable CTC interrupt
-        volatile_store(TIMSK1, volatile_load(TIMSK1) | 1 << 1);
-
-        // Good to go!
-        asm!("SEI")
-    }
+        TIMSK1::set(TIMSK1::OCIE1A);
+    })
 }
 
 #[no_mangle]
