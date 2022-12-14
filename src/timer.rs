@@ -1,19 +1,20 @@
 use core::arch::asm;
 
 use ruduino::interrupt::*;
-use ruduino::Register;
-use ruduino::cores::current::{TCCR1B,OCR1A,TIMSK1};
+use ruduino::cores::current::Timer16;
+#[allow(unused_imports)] use ruduino::modules::Timer16::{};
+use ruduino::modules::{ClockSource16,WaveformGenerationMode16};
 
 static mut COUNTDOWN: u8 = 0;
 
 pub fn setup() {
     without_interrupts(|| {
         // Configure timer 1 for CTC mode, with divider of 64
-        TCCR1B::write(TCCR1B::read() | 0b_0000_1011);
-        OCR1A::write(4167u16); // 60 Hz
-
-        // Enable CTC interrupt
-        TIMSK1::set(TIMSK1::OCIE1A);
+        Timer16::setup()
+            .waveform_generation_mode(WaveformGenerationMode16::ClearOnTimerMatchOutputCompare)
+            .clock_source(ClockSource16::Prescale64)
+            .output_compare_1(Some(4167)) // 60 Hz
+            .configure();
     })
 }
 
