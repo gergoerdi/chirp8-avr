@@ -11,6 +11,7 @@
 extern crate chirp8_engine as chirp8;
 extern crate avr_std_stub;
 extern crate ruduino;
+extern crate avr_progmem;
 
 mod spi;
 mod pcd8544;
@@ -18,6 +19,8 @@ pub mod timer;
 use timer::sleep_ms;
 mod keypad;
 mod serial_ram;
+mod rom;
+use rom::*;
 
 use chirp8::prelude::*;
 use chirp8::peripherals::*;
@@ -122,28 +125,6 @@ fn draw_test_pattern() {
     }
     sleep_ms(500);
     BOARD.clear_pixels();
-}
-
-extern {
-    fn font_rom_size() -> u16;
-    fn read_font_rom(offset: u16) -> u8;
-
-    fn prog_rom_size() -> u16;
-    fn read_prog_rom(offset: u16) -> u8;
-}
-
-fn upload_font(board: &Board) {
-    for offset in 0..unsafe{font_rom_size()} {
-        board.write_ram(offset, unsafe{ read_font_rom(offset) });
-    }
-}
-
-fn upload_prog(board: &Board) {
-    let base = 0x0200;
-
-    for offset in 0..unsafe{prog_rom_size()} {
-        board.write_ram(base + offset, unsafe{ read_prog_rom(offset) });
-    }
 }
 
 #[no_mangle]
