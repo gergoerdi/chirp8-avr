@@ -15,12 +15,13 @@ extern crate avr_progmem;
 
 mod spi;
 mod pcd8544;
-pub mod timer;
-use timer::sleep_ms;
+mod timer;
 mod keypad;
 mod serial_ram;
 mod rom;
+
 use rom::*;
+use timer::sleep_ms;
 
 use chirp8::prelude::*;
 use chirp8::peripherals::*;

@@ -1,11 +1,7 @@
 [package]
 name = "chirp8-avr"
 version = "0.1.0"
-authors = ["Dr. ERDI Gergo <gergo@erdi.hu>"]
-build-std = "core"
-
-[build-dependencies]
-cc = "1.0"
+authors = ["Gergő ÉRDI <gergo@erdi.hu>"]
 
 [dependencies]
 chirp8-engine = { path = "chirp8-engine" }
