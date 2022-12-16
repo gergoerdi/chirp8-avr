@@ -88,8 +88,29 @@ impl Peripherals for Board {
         // Not really needed? timer will take care of it?
     }
 
-    fn scan_key_row(&self, row: Byte) -> Byte {
-        keypad::scan_key_row(row)
+    fn get_keys(&self) -> u16 {
+        let row0 = keypad::scan_key_row(0);
+        let row1 = keypad::scan_key_row(1);
+        let row2 = keypad::scan_key_row(2);
+        let row3 = keypad::scan_key_row(3);
+
+        (if (row3 & 1 << 1) == 0 {0} else {1}) << 0x0 |
+        (if (row0 & 1 << 0) == 0 {0} else {1}) << 0x1 |
+        (if (row0 & 1 << 1) == 0 {0} else {1}) << 0x2 |
+        (if (row0 & 1 << 2) == 0 {0} else {1}) << 0x3 |
+        (if (row1 & 1 << 0) == 0 {0} else {1}) << 0x4 |
+        (if (row1 & 1 << 1) == 0 {0} else {1}) << 0x5 |
+        (if (row1 & 1 << 2) == 0 {0} else {1}) << 0x6 |
+        (if (row2 & 1 << 0) == 0 {0} else {1}) << 0x7 |
+        (if (row2 & 1 << 1) == 0 {0} else {1}) << 0x8 |
+        (if (row2 & 1 << 2) == 0 {0} else {1}) << 0x9 |
+
+        (if (row3 & 1 << 0) == 0 {0} else {1}) << 0xa |
+        (if (row3 & 1 << 2) == 0 {0} else {1}) << 0xb |
+        (if (row0 & 1 << 3) == 0 {0} else {1}) << 0xc |
+        (if (row1 & 1 << 3) == 0 {0} else {1}) << 0xd |
+        (if (row2 & 1 << 3) == 0 {0} else {1}) << 0xe |
+        (if (row3 & 1 << 3) == 0 {0} else {1}) << 0xf
     }
 
     fn set_timer(&mut self, v: Byte) {
