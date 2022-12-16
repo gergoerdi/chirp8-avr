@@ -1,0 +1,11 @@
+[package]
+name = "progmem-include-bytes"
+version = "0.1.0"
+authors = ["Gergő ÉRDI <gergo@erdi.hu>"]
+
+[lib]
+proc-macro=true 
+
+[dependencies]
+syn = "1.0.105"
+quote = "1.0.21"

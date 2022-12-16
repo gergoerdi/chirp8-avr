@@ -12,6 +12,7 @@ extern crate chirp8_engine as chirp8;
 extern crate avr_std_stub;
 extern crate ruduino;
 extern crate avr_progmem;
+extern crate progmem_include_bytes;
 
 mod spi;
 mod pcd8544;

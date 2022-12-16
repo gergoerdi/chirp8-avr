@@ -1,3 +1,5 @@
+use progmem_include_bytes::*;
+
 use avr_progmem::raw::read_byte;
 use core::ptr::addr_of;
 
@@ -30,8 +32,7 @@ pub fn upload_font<P>(board: &P) where P: Peripherals {
     }
 }
 
-#[link_section = ".progmem.data"]
-static PROG_ROM: [u8;850] = *include_bytes!("../image/hidden.ch8");
+progmem_include_bytes!(PROG_ROM = "image/hidden.ch8");
 
 pub fn upload_prog<P>(board: &P) where P: Peripherals {
     let base = 0x0200;
