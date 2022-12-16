@@ -2,6 +2,9 @@ use ruduino::Pin;
 use ruduino::cores::current::{port};
 use spi;
 
+pub const SCREEN_WIDTH: u8 = 84;
+pub const SCREEN_HEIGHT: u8 = 48;
+
 pub fn setup() {
     // LCD SCE = PD3
     // LCD RST = PD4
@@ -28,8 +31,6 @@ pub fn setup() {
 
     port::D3::set_high(); // Unselect LCD
 }
-
-use chirp8::peripherals::{SCREEN_WIDTH, SCREEN_HEIGHT};
 
 #[inline(never)]
 pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]) {
