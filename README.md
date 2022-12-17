@@ -36,6 +36,7 @@ locally in this directory, use `rustup override`:
 
 ```
 $ rustup override set nightly-2022-12-09
+$ rustup component add rust-src --toolchain nightly-2022-12-09
 ```
 
 You can find more information about the installation procedure in
@@ -52,10 +53,19 @@ $ cargo build --release
 # Running
 
 The above process will result in the AVR ELF executable
-`target/avr-atmega328p/release/chirp8-avr.elf`. This executable can be
-uploaded to the ATMega328P via an AVR programmer; or if you use
-something like an Arduino Pro 3.3V or an Adafruit Trinket Pro 3.3V,
-you can upload it directly via USB.
+`target/avr-unknown-gnu-atmega328/release/chirp8-avr.elf`. We can
+convert this into the `.hex` format used by [`avrdude`][avrdude] and
+simlar uploaders using `avr-objcopy`:
+
+```
+$ avr-objcopy -Oihex -R.eeprom \
+    target/avr-unknown-gnu-atmega328/release/chirp8-avr.elf
+    target/avr-unknown-gnu-atmega328/release/chirp8-avr.hex
+```
+
+This hex file can be uploaded to the ATMega328P via an AVR programmer;
+or if you use something like an Arduino Pro 3.3V or an Adafruit
+Trinket Pro 3.3V, you can upload it directly via USB.
 
 Another way of trying it out is simulation: I've implemented
 a [SimAVR-based simulator][simavr] for the above schematics that
@@ -67,3 +77,4 @@ almost runs in real time, as an interactive SDL app.
 [chirp8-sdl]: https://github.com/gergoerdi/chirp8-sdl
 [xargo-rustup]: https://github.com/japaric/xargo/issues/138
 [simavr]: https://github.com/gergoerdi/chirp8-avr-simulator
+[avrdude]: https://www.nongnu.org/avrdude/
