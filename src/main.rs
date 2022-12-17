@@ -146,16 +146,18 @@ pub unsafe fn redraw() {
 }
 
 fn draw_test_pattern(board: &mut Board) {
+    let dx = (SCREEN_WIDTH - SCREEN_HEIGHT) / 2;
+
     for i in 0..SCREEN_HEIGHT {
-        board.set_pixel(i, SCREEN_HEIGHT - (i + 1), false);
-        board.set_pixel(i, i, true);
+        board.set_pixel(i + dx, SCREEN_HEIGHT - (i + 1), false);
+        board.set_pixel(i + dx, i, true);
     }
 
     sleep_ms(500);
 
     for i in 0..SCREEN_HEIGHT {
-        board.set_pixel(i, SCREEN_HEIGHT - (i + 1), true);
-        board.set_pixel(i, i, false);
+        board.set_pixel(i + dx, SCREEN_HEIGHT - (i + 1), true);
+        board.set_pixel(i + dx, i, false);
     }
     sleep_ms(500);
     board.clear_pixels();
