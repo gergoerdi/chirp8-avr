@@ -53,14 +53,14 @@ $ cargo build --release
 # Running
 
 The above process will result in the AVR ELF executable
-`target/avr-unknown-gnu-atmega328/release/chirp8-avr.elf`. We can
+`target/avr-atmega328p/release/chirp8-avr.elf`. We can
 convert this into the `.hex` format used by [`avrdude`][avrdude] and
 simlar uploaders using `avr-objcopy`:
 
 ```
 $ avr-objcopy -Oihex -R.eeprom \
-    target/avr-unknown-gnu-atmega328/release/chirp8-avr.elf
-    target/avr-unknown-gnu-atmega328/release/chirp8-avr.hex
+    target/avr-atmega328p/release/chirp8-avr.elf
+    target/avr-atmega328p/release/chirp8-avr.hex
 ```
 
 This hex file can be uploaded to the ATMega328P via an AVR programmer;
