@@ -171,8 +171,12 @@ pub extern fn main() {
 
     draw_test_pattern(&mut board);
 
-    upload_font(&mut board);
-    upload_prog(&mut board);
+    for offset in 0..FONT_ROM.len() {
+        board.write_ram(offset as u16, FONT_ROM.load_at(offset));
+    }
+    for offset in 0..PROG_ROM.len() {
+        board.write_ram(0x0200 + offset as u16, PROG_ROM.load_at(offset));
+    }
 
     let mut cpu = chirp8::cpu::CPU::new();
 
