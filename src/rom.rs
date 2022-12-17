@@ -1,10 +1,8 @@
 use avr_progmem::progmem;
 use progmem_include_bytes::*;
 
-use Peripherals;
-
 progmem! {
-    static progmem FONT_ROM: [u8;8 * 16] =
+    pub static progmem FONT_ROM: [u8;8 * 16] =
         [ 0xF0, 0x90, 0x90, 0x90, 0xF0, 0x00, 0x00, 0x00,
           0x20, 0x60, 0x20, 0x20, 0x70, 0x00, 0x00, 0x00,
           0xF0, 0x10, 0xF0, 0x80, 0xF0, 0x00, 0x00, 0x00,
@@ -24,20 +22,4 @@ progmem! {
         ];
 }
 
-pub fn upload_font<P>(board: &mut P) where P: Peripherals {
-    for offset in 0..FONT_ROM.len() {
-        let data = FONT_ROM.load_at(offset);
-        board.write_ram(offset as u16, data);
-    }
-}
-
-progmem_include_bytes!(PROG_ROM = "image/hidden.ch8");
-
-pub fn upload_prog<P>(board: &mut P) where P: Peripherals {
-    let base = 0x0200;
-
-    for offset in 0..PROG_ROM.len() {
-        let data = PROG_ROM.load_at(offset);
-        board.write_ram(base + offset as u16, data);
-    }
-}
+progmem_include_bytes!(pub PROG_ROM = "image/hidden.ch8");
