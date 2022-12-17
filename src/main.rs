@@ -30,8 +30,6 @@ use chirp8::peripherals::*;
 struct Board {
 }
 
-static mut BOARD: Board = Board{};
-
 static mut FB_PIXELS: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize] = [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize];
 
 static mut FB_DIRTY: bool = false;
@@ -46,14 +44,12 @@ impl Peripherals for Board {
     fn keep_running(&self) -> bool { true }
 
     fn clear_pixels(&mut self) {
-        unsafe {
-            for col in FB_PIXELS.iter_mut() {
-                for pixel in col.iter_mut() {
-                    *pixel = 0;
-                }
+        for col in unsafe{ FB_PIXELS.iter_mut() } {
+            for pixel in col.iter_mut() {
+                *pixel = 0;
             }
-            FB_DIRTY = true;
         }
+        unsafe{ FB_DIRTY = true }
     }
 
     #[inline(never)]
@@ -138,10 +134,10 @@ impl Peripherals for Board {
 }
 
 #[inline(never)]
-pub unsafe fn redraw() {
-    if FB_DIRTY {
-        pcd8544::send(&FB_PIXELS);
-        FB_DIRTY = false;
+pub fn redraw() {
+    if unsafe{ FB_DIRTY } {
+        pcd8544::send(unsafe{ &FB_PIXELS });
+        unsafe{ FB_DIRTY = false }
     }
 }
 
@@ -165,7 +161,7 @@ fn draw_test_pattern(board: &mut Board) {
 
 #[no_mangle]
 pub extern fn main() {
-    let io: &mut Board = unsafe{ &mut BOARD };
+    let mut board: Board = Board{};
 
     spi::setup();
     pcd8544::setup();
@@ -173,14 +169,14 @@ pub extern fn main() {
     serial_ram::setup();
     timer::setup();
 
-    draw_test_pattern(unsafe{ &mut BOARD });
+    draw_test_pattern(&mut board);
 
-    upload_font(io);
-    upload_prog(io);
+    upload_font(&mut board);
+    upload_prog(&mut board);
 
     let mut cpu = chirp8::cpu::CPU::new();
 
     loop {
-        cpu.step(io);
+        cpu.step(&mut board);
     }
 }
