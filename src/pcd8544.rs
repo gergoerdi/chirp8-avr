@@ -33,7 +33,7 @@ pub fn setup() {
 }
 
 #[inline(never)]
-pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]) {
+pub fn send<I>(pixels: I) where I: IntoIterator<Item = u8> {
     port::D3::set_low(); // Chip select LCD
     port::D5::set_low(); // Set Command mode
 
@@ -42,10 +42,8 @@ pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]
     spi::sync(0x40 | 0);   // Set Y address
 
     port::D5::set_high(); // Set Data mode
-    for col in pixels.iter() {
-        for &pixel in col.iter() {
-            spi::sync(pixel);
-        }
+    for stripe in pixels.into_iter() {
+        spi::sync(stripe);
     }
 
     port::D3::set_high(); // Unselect LCD

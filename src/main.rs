@@ -20,9 +20,11 @@ mod timer;
 mod keypad;
 mod serial_ram;
 mod rom;
+mod framebuffer;
 
 use rom::*;
 use timer::sleep_ms;
+use framebuffer::FBIter;
 
 use chirp8::prelude::*;
 use chirp8::peripherals::*;
@@ -42,52 +44,22 @@ impl Board {
 }
 
 static mut BOARD: Board = Board::new();
-static mut FB_PIXELS: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize] = [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize];
-
-fn xy_from_chirp8(x: u8, y: u8) -> (u8, u8) {
-    let dx = (pcd8544::SCREEN_WIDTH - SCREEN_WIDTH) / 2;
-    let dy = (pcd8544::SCREEN_HEIGHT - SCREEN_HEIGHT) / 2;
-    (x + dx, y + dy)
-}
+static mut FB_ROWS: [u64; SCREEN_HEIGHT as usize] = [0; SCREEN_HEIGHT as usize];
 
 impl Peripherals for Board {
     fn keep_running(&self) -> bool { true }
 
-    fn clear_pixels(&mut self) {
-        for col in unsafe{ FB_PIXELS.iter_mut() } {
-            for pixel in col.iter_mut() {
-                *pixel = 0;
-            }
-        }
-        self.fb_dirty = true
+    #[inline(never)]
+    fn get_pixel_row(&self, y: u8) -> u64 {
+        unsafe{ FB_ROWS[y as usize] }
     }
 
     #[inline(never)]
-    fn set_pixel(&mut self, x: Byte, y: Byte, v: bool) {
-        let (x, y) = xy_from_chirp8(x, y);
-
-        let row = y >> 3;
-        let offset = y - (row << 3);
-        let mask = 1 << offset;
-        let bit = (if v {1} else {0}) << offset;
-
+    fn set_pixel_row(&mut self, y: u8, row: u64) {
         unsafe {
-            FB_PIXELS[x as usize][row as usize] = (FB_PIXELS[x as usize][row as usize] & !mask) | bit;
+            FB_ROWS[y as usize] = row;
         }
         self.fb_dirty = true;
-    }
-
-    #[inline(never)]
-    fn get_pixel(&self, x: Byte, y: Byte) -> bool {
-        let (x, y) = xy_from_chirp8(x, y);
-
-        let row = y >> 3;
-        let offset = y - (row << 3);
-        let mask = 1 << offset;
-
-        unsafe{
-            FB_PIXELS[x as usize][row as usize] & mask != 0
-        }
     }
 
     fn redraw(&mut self) {
@@ -147,7 +119,7 @@ impl Peripherals for Board {
 pub fn redraw() {
     let board = unsafe{ &mut BOARD };
     if board.fb_dirty {
-        pcd8544::send(unsafe{ &FB_PIXELS });
+        pcd8544::send(FBIter::new(unsafe{ &FB_ROWS }));
         board.fb_dirty = false;
     }
 }
@@ -160,19 +132,23 @@ pub fn tick() {
 fn draw_test_pattern(board: &mut Board) {
     let dx = (SCREEN_WIDTH - SCREEN_HEIGHT) / 2;
 
-    for i in 0..SCREEN_HEIGHT {
-        board.set_pixel(i + dx, SCREEN_HEIGHT - (i + 1), false);
-        board.set_pixel(i + dx, i, true);
+    let mut row: u64 = 1 << 47;
+    for i in 0..32 {
+        board.set_pixel_row(i, row);
+        row >>= 1;
     }
+    sleep_ms(500);
 
+    let mut row: u64 = 1 << 47;
+    for i in (0..32).rev() {
+        board.set_pixel_row(i, row);
+        row >>= 1;
+    }
     sleep_ms(500);
 
     for i in 0..SCREEN_HEIGHT {
-        board.set_pixel(i + dx, SCREEN_HEIGHT - (i + 1), true);
-        board.set_pixel(i + dx, i, false);
+        board.set_pixel_row(i, 0)
     }
-    sleep_ms(500);
-    board.clear_pixels();
 }
 
 #[no_mangle]
