@@ -2,12 +2,12 @@
 
 This is a CHIP-8 virtual machine implementation running on AVR. 
 
-Its big party trick is that **it is written in Rust**: it is the first
-non-trivial Rust application running on AVR. You can read about its
-development process in [my blog post][blog]. The CHIP-8 VM itself is
-implemented in a [separate, portable crate][chirp8-engine] written in
-idiomatic Rust fashion, heavily using algebraic data types and pattern
-matching; this crate can then be used both to build
+Its big party trick is that **it is written in Rust**: back in 2017,
+it was the first non-trivial Rust application running on AVR. You can
+read about its development process in [my blog post][blog]. The CHIP-8
+VM itself is implemented in a [separate, portable crate][chirp8-engine] 
+written in idiomatic Rust fashion, heavily using algebraic data types
+and pattern matching; this crate can then be used both to build
 an [SDL-based desktop app][chirp8-sdl] and also this crate running on
 AVR microcontrollers.
 
