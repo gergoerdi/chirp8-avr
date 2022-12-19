@@ -28,11 +28,21 @@ use chirp8::prelude::*;
 use chirp8::peripherals::*;
 
 struct Board {
+    fb_dirty: bool,
+    fb_pixels: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize],
+    countdown: u8
 }
 
-static mut FB_PIXELS: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize] = [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize];
-
-static mut FB_DIRTY: bool = false;
+impl Board {
+    pub const fn new() -> Board {
+        Board {
+            fb_dirty: false,
+            fb_pixels: [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize],
+            countdown: 0
+        }
+    }
+}
+static mut BOARD: Board = Board::new();
 
 fn xy_from_chirp8(x: u8, y: u8) -> (u8, u8) {
     let dx = (pcd8544::SCREEN_WIDTH - SCREEN_WIDTH) / 2;
@@ -44,12 +54,12 @@ impl Peripherals for Board {
     fn keep_running(&self) -> bool { true }
 
     fn clear_pixels(&mut self) {
-        for col in unsafe{ FB_PIXELS.iter_mut() } {
+        for col in self.fb_pixels.iter_mut() {
             for pixel in col.iter_mut() {
                 *pixel = 0;
             }
         }
-        unsafe{ FB_DIRTY = true }
+        self.fb_dirty = true
     }
 
     #[inline(never)]
@@ -61,10 +71,8 @@ impl Peripherals for Board {
         let mask = 1 << offset;
         let bit = (if v {1} else {0}) << offset;
 
-        unsafe {
-            FB_PIXELS[x as usize][row as usize] = (FB_PIXELS[x as usize][row as usize] & !mask) | bit;
-            FB_DIRTY = true;
-        }
+        self.fb_pixels[x as usize][row as usize] = (self.fb_pixels[x as usize][row as usize] & !mask) | bit;
+        self.fb_dirty = true;
     }
 
     #[inline(never)]
@@ -75,9 +83,7 @@ impl Peripherals for Board {
         let offset = y - (row << 3);
         let mask = 1 << offset;
 
-        unsafe{
-            FB_PIXELS[x as usize][row as usize] & mask != 0
-        }
+        self.fb_pixels[x as usize][row as usize] & mask != 0
     }
 
     fn redraw(&mut self) {
@@ -110,11 +116,11 @@ impl Peripherals for Board {
     }
 
     fn set_timer(&mut self, v: Byte) {
-        timer::set_countdown(v)
+        self.countdown = v
     }
 
     fn get_timer(&self) -> Byte {
-        timer::get_countdown()
+        self.countdown
     }
 
 
@@ -135,10 +141,16 @@ impl Peripherals for Board {
 
 #[inline(never)]
 pub fn redraw() {
-    if unsafe{ FB_DIRTY } {
-        pcd8544::send(unsafe{ &FB_PIXELS });
-        unsafe{ FB_DIRTY = false }
+    let board = unsafe{ &mut BOARD };
+    if board.fb_dirty {
+        pcd8544::send(&board.fb_pixels);
+        board.fb_dirty = false;
     }
+}
+
+pub fn tick() {
+    let board = unsafe{ &mut BOARD };
+    if board.countdown > 0 { board.countdown -= 1; };
 }
 
 fn draw_test_pattern(board: &mut Board) {
@@ -161,7 +173,7 @@ fn draw_test_pattern(board: &mut Board) {
 
 #[no_mangle]
 pub extern fn main() {
-    let mut board: Board = Board{};
+    let board = unsafe{ &mut BOARD };
 
     spi::setup();
     pcd8544::setup();
@@ -169,7 +181,7 @@ pub extern fn main() {
     serial_ram::setup();
     timer::setup();
 
-    draw_test_pattern(&mut board);
+    draw_test_pattern(board);
 
     for offset in 0..FONT_ROM.len() {
         board.write_ram(offset as u16, FONT_ROM.load_at(offset));
@@ -181,6 +193,6 @@ pub extern fn main() {
     let mut cpu = chirp8::cpu::CPU::new();
 
     loop {
-        cpu.step(&mut board);
+        cpu.step(board);
     }
 }
