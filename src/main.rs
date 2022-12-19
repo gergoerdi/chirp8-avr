@@ -30,6 +30,7 @@ use chirp8::prelude::*;
 use chirp8::peripherals::*;
 
 struct Board {
+    fb_rows: [u64; SCREEN_HEIGHT as usize],
     fb_dirty: bool,
     countdown: u8
 }
@@ -38,27 +39,25 @@ impl Board {
     pub const fn new() -> Board {
         Board {
             fb_dirty: false,
+            fb_rows: [0; SCREEN_HEIGHT as usize],
             countdown: 0
         }
     }
 }
 
 static mut BOARD: Board = Board::new();
-static mut FB_ROWS: [u64; SCREEN_HEIGHT as usize] = [0; SCREEN_HEIGHT as usize];
 
 impl Peripherals for Board {
     fn keep_running(&self) -> bool { true }
 
     #[inline(never)]
     fn get_pixel_row(&self, y: u8) -> u64 {
-        unsafe{ FB_ROWS[y as usize] }
+        self.fb_rows[y as usize]
     }
 
     #[inline(never)]
     fn set_pixel_row(&mut self, y: u8, row: u64) {
-        unsafe {
-            FB_ROWS[y as usize] = row;
-        }
+        self.fb_rows[y as usize] = row;
         self.fb_dirty = true;
     }
 
@@ -119,7 +118,7 @@ impl Peripherals for Board {
 pub fn redraw() {
     let board = unsafe{ &mut BOARD };
     if board.fb_dirty {
-        pcd8544::send(FBIter::new(unsafe{ &FB_ROWS }));
+        pcd8544::send(FBIter::new(&board.fb_rows));
         board.fb_dirty = false;
     }
 }
