@@ -5,8 +5,6 @@ use ruduino::cores::current::Timer16;
 #[allow(unused_imports)] use ruduino::modules::Timer16::{};
 use ruduino::modules::{ClockSource16,WaveformGenerationMode16};
 
-static mut COUNTDOWN: u8 = 0;
-
 pub fn setup() {
     without_interrupts(|| {
         // Configure timer 1 for CTC mode, with divider of 64
@@ -20,17 +18,8 @@ pub fn setup() {
 
 #[no_mangle]
 pub unsafe extern "avr-interrupt" fn __vector_11() {
-    if COUNTDOWN > 0 { COUNTDOWN -= 1; }
-
+    super::tick();
     super::redraw();
-}
-
-pub fn get_countdown() -> u8 {
-    unsafe{ COUNTDOWN }
-}
-
-pub fn set_countdown(countdown: u8) {
-    unsafe{ COUNTDOWN = countdown }
 }
 
 pub fn sleep_ms(duration_ms: u16) {

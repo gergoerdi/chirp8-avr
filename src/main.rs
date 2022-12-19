@@ -28,11 +28,21 @@ use chirp8::prelude::*;
 use chirp8::peripherals::*;
 
 struct Board {
+    fb_dirty: bool,
+    countdown: u8
 }
 
-static mut FB_PIXELS: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize] = [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize];
+impl Board {
+    pub const fn new() -> Board {
+        Board {
+            fb_dirty: false,
+            countdown: 0
+        }
+    }
+}
 
-static mut FB_DIRTY: bool = false;
+static mut BOARD: Board = Board::new();
+static mut FB_PIXELS: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize] = [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize];
 
 fn xy_from_chirp8(x: u8, y: u8) -> (u8, u8) {
     let dx = (pcd8544::SCREEN_WIDTH - SCREEN_WIDTH) / 2;
@@ -49,7 +59,7 @@ impl Peripherals for Board {
                 *pixel = 0;
             }
         }
-        unsafe{ FB_DIRTY = true }
+        self.fb_dirty = true
     }
 
     #[inline(never)]
@@ -63,8 +73,8 @@ impl Peripherals for Board {
 
         unsafe {
             FB_PIXELS[x as usize][row as usize] = (FB_PIXELS[x as usize][row as usize] & !mask) | bit;
-            FB_DIRTY = true;
         }
+        self.fb_dirty = true;
     }
 
     #[inline(never)]
@@ -110,11 +120,11 @@ impl Peripherals for Board {
     }
 
     fn set_timer(&mut self, v: Byte) {
-        timer::set_countdown(v)
+        self.countdown = v
     }
 
     fn get_timer(&self) -> Byte {
-        timer::get_countdown()
+        self.countdown
     }
 
 
@@ -135,10 +145,16 @@ impl Peripherals for Board {
 
 #[inline(never)]
 pub fn redraw() {
-    if unsafe{ FB_DIRTY } {
+    let board = unsafe{ &mut BOARD };
+    if board.fb_dirty {
         pcd8544::send(unsafe{ &FB_PIXELS });
-        unsafe{ FB_DIRTY = false }
+        board.fb_dirty = false;
     }
+}
+
+pub fn tick() {
+    let board = unsafe{ &mut BOARD };
+    if board.countdown > 0 { board.countdown -= 1; };
 }
 
 fn draw_test_pattern(board: &mut Board) {
@@ -161,7 +177,7 @@ fn draw_test_pattern(board: &mut Board) {
 
 #[no_mangle]
 pub extern fn main() {
-    let mut board: Board = Board{};
+    let board = unsafe{ &mut BOARD };
 
     spi::setup();
     pcd8544::setup();
@@ -169,7 +185,7 @@ pub extern fn main() {
     serial_ram::setup();
     timer::setup();
 
-    draw_test_pattern(&mut board);
+    draw_test_pattern(board);
 
     for offset in 0..FONT_ROM.len() {
         board.write_ram(offset as u16, FONT_ROM.load_at(offset));
@@ -181,6 +197,6 @@ pub extern fn main() {
     let mut cpu = chirp8::cpu::CPU::new();
 
     loop {
-        cpu.step(&mut board);
+        cpu.step(board);
     }
 }
