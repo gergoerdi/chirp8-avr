@@ -19,7 +19,6 @@ pub fn setup() {
 #[no_mangle]
 pub unsafe extern "avr-interrupt" fn __vector_11() {
     super::tick();
-    super::redraw();
 }
 
 pub fn sleep_ms(duration_ms: u16) {

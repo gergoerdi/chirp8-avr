@@ -137,8 +137,7 @@ impl Peripherals for Board {
     fn get_random(&mut self) -> Byte { 0x42 }
 }
 
-pub fn redraw() {
-    let board = unsafe{ &mut BOARD };
+fn redraw(board: &mut Board) {
     if board.fb_dirty {
         pcd8544::send(&board.fb_pixels);
         board.fb_dirty = false;
@@ -148,6 +147,7 @@ pub fn redraw() {
 pub fn tick() {
     let board = unsafe{ &mut BOARD };
     if board.countdown > 0 { board.countdown -= 1; };
+    redraw(board);
 }
 
 fn draw_test_pattern(board: &mut Board) {
