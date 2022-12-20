@@ -30,7 +30,8 @@ use chirp8::peripherals::*;
 struct Board {
     fb_dirty: bool,
     fb_pixels: [[u8; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize],
-    countdown: u8
+    countdown: u8,
+    prng_state: u16,
 }
 
 impl Board {
@@ -38,7 +39,8 @@ impl Board {
         Board {
             fb_dirty: false,
             fb_pixels: [[0; (pcd8544::SCREEN_HEIGHT / 8) as usize]; pcd8544::SCREEN_WIDTH as usize],
-            countdown: 0
+            countdown: 0,
+            prng_state: 0x0001
         }
     }
 }
@@ -134,7 +136,12 @@ impl Peripherals for Board {
         serial_ram::write_ram(addr, v)
     }
 
-    fn get_random(&mut self) -> Byte { 0x42 }
+    fn get_random(&mut self) -> Byte {
+        let lsb = self.prng_state & 1;
+        self.prng_state >>= 1;
+        if lsb != 0 { self.prng_state ^= 0xd008 } // Covers full u16 space
+        self.prng_state as Byte
+    }
 }
 
 fn redraw(board: &mut Board) {
@@ -147,6 +154,7 @@ fn redraw(board: &mut Board) {
 pub fn tick() {
     let board = unsafe{ &mut BOARD };
     if board.countdown > 0 { board.countdown -= 1; };
+    board.get_random();
     redraw(board);
 }
 
