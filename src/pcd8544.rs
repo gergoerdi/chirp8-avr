@@ -32,7 +32,6 @@ pub fn setup() {
     port::D3::set_high(); // Unselect LCD
 }
 
-#[inline(never)]
 pub fn send(pixels: &[[u8; (SCREEN_HEIGHT / 8) as usize]; SCREEN_WIDTH as usize]) {
     port::D3::set_low(); // Chip select LCD
     port::D5::set_low(); // Set Command mode

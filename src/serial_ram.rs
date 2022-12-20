@@ -13,7 +13,6 @@ pub fn setup() {
     port::D6::set_high();
 }
 
-#[inline(never)]
 pub fn write_ram(addr: u16, value: u8) {
     without_interrupts(|| {
         port::D6::set_low();
@@ -25,7 +24,6 @@ pub fn write_ram(addr: u16, value: u8) {
     })
 }
 
-#[inline(never)]
 pub fn read_ram(addr: u16) -> u8 {
     without_interrupts(|| {
         port::D6::set_low();

@@ -62,7 +62,6 @@ impl Peripherals for Board {
         self.fb_dirty = true
     }
 
-    #[inline(never)]
     fn set_pixel(&mut self, x: Byte, y: Byte, v: bool) {
         let (x, y) = xy_from_chirp8(x, y);
 
@@ -75,7 +74,6 @@ impl Peripherals for Board {
         self.fb_dirty = true;
     }
 
-    #[inline(never)]
     fn get_pixel(&self, x: Byte, y: Byte) -> bool {
         let (x, y) = xy_from_chirp8(x, y);
 
@@ -139,7 +137,6 @@ impl Peripherals for Board {
     fn get_random(&mut self) -> Byte { 0x42 }
 }
 
-#[inline(never)]
 pub fn redraw() {
     let board = unsafe{ &mut BOARD };
     if board.fb_dirty {
