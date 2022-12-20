@@ -9,7 +9,8 @@ const FB_Y_END: u8 = FB_Y_START + SCREEN_HEIGHT;
 pub struct FBIter<'a> {
     data: &'a [u64; SCREEN_HEIGHT as usize],
     x: u8,
-    y: u8
+    y: u8,
+    mask: u64
 }
 
 impl<'a> FBIter<'a> {
@@ -17,7 +18,8 @@ impl<'a> FBIter<'a> {
         FBIter {
             data: data,
             x: 0,
-            y: 0
+            y: 0,
+            mask: 1 << 63
         }
     }
 
@@ -28,11 +30,10 @@ impl<'a> FBIter<'a> {
         let y = self.y - FB_Y_START;
 
         let mut stripe = 0x00;
-        let mask = 1 << (63 - x);
 
         for i in (y..y+8).rev() {
             let row: u64 = self.data[i as usize];
-            let pixel = if row & mask == 0 { 0 } else { 1 };
+            let pixel = if row & self.mask == 0 { 0 } else { 1 };
 
             stripe = (stripe << 1) | pixel;
         }
@@ -54,6 +55,7 @@ impl<'a> Iterator for FBIter<'a> {
         self.y += 8;
         if self.y >= pcd8544::SCREEN_HEIGHT {
             self.y = 0;
+            if self.x >= FB_X_START { self.mask >>= 1 }
             self.x += 1;
         }
 
