@@ -1,3 +1,6 @@
 [submodule "chirp8-engine"]
 	path = chirp8-engine
 	url = git@github.com:gergoerdi/chirp8-engine.git
+[submodule "rust-compiler-builtins"]
+	path = compiler-builtins
+	url = git@github.com:gergoerdi/rust-compiler-builtins.git

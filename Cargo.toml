@@ -3,12 +3,13 @@ name = "chirp8-avr"
 version = "0.1.0"
 authors = ["Gergő ÉRDI <gergo@erdi.hu>"]
 
+[profile.release]
+lto = true
+
 [dependencies]
 chirp8-engine = { path = "chirp8-engine" }
 avr-std-stub = "1.0"
 ruduino = {  git = "https://github.com/avr-rust/ruduino", rev = "c0574999752c6bfc2c190312661a0c264247e5b1" }
 avr-progmem = "0.3.1" 
 progmem-include-bytes = { path = "progmem-include-bytes" }
-
-[profile.release]
-lto = true
+compiler_builtins_local = { path = "compiler-builtins", package = "compiler_builtins" }

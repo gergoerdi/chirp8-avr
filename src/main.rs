@@ -8,6 +8,7 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
+extern crate compiler_builtins_local;
 extern crate chirp8_engine as chirp8;
 extern crate avr_std_stub;
 extern crate ruduino;

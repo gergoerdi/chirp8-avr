@@ -60,6 +60,7 @@ dependencies = [
  "avr-progmem",
  "avr-std-stub",
  "chirp8-engine",
+ "compiler_builtins",
  "progmem-include-bytes",
  "ruduino",
 ]
@@ -67,6 +68,10 @@ dependencies = [
 [[package]]
 name = "chirp8-engine"
 version = "0.1.0"
+
+[[package]]
+name = "compiler_builtins"
+version = "0.1.85"
 
 [[package]]
 name = "const_env--value"
