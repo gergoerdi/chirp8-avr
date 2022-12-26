@@ -5,4 +5,4 @@ target = "avr-atmega328p.json"
 build-std = ["core"]
 
 [env]
-AVR_CPU_FREQUENCY_HZ = "16_000_000"
+AVR_CPU_FREQUENCY_HZ = "12_000_000"
