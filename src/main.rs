@@ -27,14 +27,13 @@ use rom::*;
 use timer::sleep_ms;
 use framebuffer::FBIter;
 
+use chirp8::cpu::CPU;
 use chirp8::prelude::*;
 use chirp8::peripherals::*;
 
 struct Board {
     fb_dirty: bool,
     fb_rows: [u64; SCREEN_HEIGHT as usize],
-    countdown: u8,
-    prng_state: u16,
 }
 
 impl Board {
@@ -42,16 +41,13 @@ impl Board {
         Board {
             fb_dirty: false,
             fb_rows: [0; SCREEN_HEIGHT as usize],
-            countdown: 0,
-            prng_state: 0x0001
         }
     }
 }
 static mut BOARD: Board = Board::new();
+static mut CPU: CPU = CPU::new();
 
 impl Peripherals for Board {
-    fn keep_running(&self) -> bool { true }
-
     fn get_pixel_row(&self, y: u8) -> u64 {
         self.fb_rows[y as usize]
     }
@@ -90,15 +86,6 @@ impl Peripherals for Board {
         (if (row3 & 1 << 3) == 0 {0} else {1}) << 0xf
     }
 
-    fn set_timer(&mut self, v: Byte) {
-        self.countdown = v
-    }
-
-    fn get_timer(&self) -> Byte {
-        self.countdown
-    }
-
-
     fn set_sound(&mut self, v: Byte) {
         // Not implemented on this board
     }
@@ -109,13 +96,6 @@ impl Peripherals for Board {
 
     fn write_ram(&mut self, addr: Addr, v: Byte) {
         serial_ram::write_ram(addr, v)
-    }
-
-    fn get_random(&mut self) -> Byte {
-        let lsb = self.prng_state & 1;
-        self.prng_state >>= 1;
-        if lsb != 0 { self.prng_state ^= 0xd008 } // Covers full u16 space
-        self.prng_state as Byte
     }
 }
 
@@ -128,9 +108,10 @@ fn redraw(board: &mut Board) {
 
 pub fn tick() {
     let board = unsafe{ &mut BOARD };
-    if board.countdown > 0 { board.countdown -= 1; };
-    board.get_random();
     redraw(board);
+
+    let cpu = unsafe{ &mut CPU };
+    cpu.tick_frame();
 }
 
 fn draw_test_pattern(board: &mut Board) {
@@ -174,8 +155,7 @@ pub extern fn main() {
         board.write_ram(0x0200 + offset as u16, PROG_ROM.load_at(offset));
     }
 
-    let mut cpu = chirp8::cpu::CPU::new();
-
+    let cpu = unsafe{ &mut CPU };
     loop {
         cpu.step(board);
     }
