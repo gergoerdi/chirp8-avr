@@ -3,7 +3,6 @@ target = "avr-atmega328p.json"
 
 [unstable]
 build-std = ["core"]
-build-std-features = ["compiler-builtins-mangled-names"] # https://github.com/rust-lang/rust/issues/82242#issuecomment-997400373
 
 [env]
 AVR_CPU_FREQUENCY_HZ = "12_000_000"
