@@ -35,8 +35,8 @@ have to use a recent nightly. To override the default Rust version
 locally in this directory, use `rustup override`:
 
 ```
-$ rustup override set nightly-2022-12-09
-$ rustup component add rust-src --toolchain nightly-2022-12-09
+$ rustup override set nightly-2024-01-01
+$ rustup component add rust-src --toolchain nightly-2024-01-01
 ```
 
 You can find more information about the installation procedure in
