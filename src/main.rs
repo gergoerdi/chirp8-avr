@@ -26,9 +26,7 @@ use rom::*;
 use timer::sleep_ms;
 use framebuffer::FBIter;
 
-use chirp8::cpu::CPU;
-use chirp8::prelude::*;
-use chirp8::peripherals::*;
+use chirp8::cpu::*;
 
 struct Board {
     fb_dirty: bool,
@@ -44,7 +42,7 @@ impl Board {
     }
 }
 static mut BOARD: Board = Board::new();
-static mut CPU: CPU = CPU::new();
+static mut CPU: CPU = CPU::new(QUIRKS);
 
 impl Peripherals for Board {
     fn get_pixel_row(&self, y: u8) -> u64 {
@@ -54,10 +52,6 @@ impl Peripherals for Board {
     fn set_pixel_row(&mut self, y: u8, row: u64) {
         self.fb_rows[y as usize] = row;
         self.fb_dirty = true;
-    }
-
-    fn redraw(&mut self) {
-        // Not really needed? timer will take care of it?
     }
 
     fn get_keys(&self) -> u16 {
