@@ -66,23 +66,23 @@ impl Peripherals for Board {
         let row2 = keypad::scan_key_row(2);
         let row3 = keypad::scan_key_row(3);
 
-        (if (row3 & 1 << 1) == 0 {0} else {1}) << 0x0 |
-        (if (row0 & 1 << 0) == 0 {0} else {1}) << 0x1 |
-        (if (row0 & 1 << 1) == 0 {0} else {1}) << 0x2 |
-        (if (row0 & 1 << 2) == 0 {0} else {1}) << 0x3 |
-        (if (row1 & 1 << 0) == 0 {0} else {1}) << 0x4 |
-        (if (row1 & 1 << 1) == 0 {0} else {1}) << 0x5 |
-        (if (row1 & 1 << 2) == 0 {0} else {1}) << 0x6 |
-        (if (row2 & 1 << 0) == 0 {0} else {1}) << 0x7 |
-        (if (row2 & 1 << 1) == 0 {0} else {1}) << 0x8 |
-        (if (row2 & 1 << 2) == 0 {0} else {1}) << 0x9 |
+        (if (row3 & 1 << 1) == 0 {1} else {0}) << 0x0 |
+        (if (row0 & 1 << 0) == 0 {1} else {0}) << 0x1 |
+        (if (row0 & 1 << 1) == 0 {1} else {0}) << 0x2 |
+        (if (row0 & 1 << 2) == 0 {1} else {0}) << 0x3 |
+        (if (row1 & 1 << 0) == 0 {1} else {0}) << 0x4 |
+        (if (row1 & 1 << 1) == 0 {1} else {0}) << 0x5 |
+        (if (row1 & 1 << 2) == 0 {1} else {0}) << 0x6 |
+        (if (row2 & 1 << 0) == 0 {1} else {0}) << 0x7 |
+        (if (row2 & 1 << 1) == 0 {1} else {0}) << 0x8 |
+        (if (row2 & 1 << 2) == 0 {1} else {0}) << 0x9 |
 
-        (if (row3 & 1 << 0) == 0 {0} else {1}) << 0xa |
-        (if (row3 & 1 << 2) == 0 {0} else {1}) << 0xb |
-        (if (row0 & 1 << 3) == 0 {0} else {1}) << 0xc |
-        (if (row1 & 1 << 3) == 0 {0} else {1}) << 0xd |
-        (if (row2 & 1 << 3) == 0 {0} else {1}) << 0xe |
-        (if (row3 & 1 << 3) == 0 {0} else {1}) << 0xf
+        (if (row3 & 1 << 0) == 0 {1} else {0}) << 0xa |
+        (if (row3 & 1 << 2) == 0 {1} else {0}) << 0xb |
+        (if (row0 & 1 << 3) == 0 {1} else {0}) << 0xc |
+        (if (row1 & 1 << 3) == 0 {1} else {0}) << 0xd |
+        (if (row2 & 1 << 3) == 0 {1} else {0}) << 0xe |
+        (if (row3 & 1 << 3) == 0 {1} else {0}) << 0xf
     }
 
     fn set_sound(&mut self, v: Byte) {
