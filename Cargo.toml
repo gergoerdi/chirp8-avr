@@ -13,3 +13,4 @@ progmem-include-bytes = { path = "progmem-include-bytes" }
 
 [profile.release]
 lto = true
+strip = "symbols"
