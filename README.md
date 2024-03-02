@@ -14,7 +14,7 @@ AVR microcontrollers.
 The intended hardware is a simple circuit with very few components:
 
 * AVR ATMega328P microcontroller
-* PCD8522 84x48 monochrome LCD
+* PCD8544 84x48 monochrome LCD
 * Microchip 23K640 serial RAM
 * 4x4 keypad
 * 10K resistors (4 pcs)
